@@ -3,9 +3,8 @@ services:
     name: tq-bank-demo
     runtime: docker
     plan: free
-    rootDir: banking-system
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./banking-system/Dockerfile
+    dockerContext: ./banking-system
     envVars:
-      - key: app.seed
+      - key: APP_SEED
         value: admin
