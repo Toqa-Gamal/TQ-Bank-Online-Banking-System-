@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TQ Bank</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand" qa-test="brand-logo"><img src="img/logo-mark.png" alt="TQ Bank"><span class="bname">TQ Bank</span></div>
+    <nav id="nav" class="hidden" qa-test="nav">
+      <span id="welcome" class="who" qa-test="nav-welcome"></span>
+      <button id="nav-accounts" data-view="accounts" qa-test="nav-accounts">Accounts</button>
+      <button id="nav-open" data-view="open" qa-test="nav-open-account">Open Account</button>
+      <button id="nav-transact" data-view="transact" qa-test="nav-transactions">Transactions</button>
+      <button id="nav-history" data-view="history" qa-test="nav-history">History</button>
+      <button id="nav-admin" data-view="admin" class="hidden" qa-test="nav-admin">Admin</button>
+      <button id="logout-btn" class="logout" qa-test="nav-logout">Logout</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- AUTH -->
+<section id="view-auth" class="auth-wrap" qa-test="page-auth">
+  <div class="auth-title"><div class="logo-wrap" qa-test="auth-logo"><img class="logo-big" src="img/logo-full.png" alt="TQ Bank"></div><h1>Welcome to TQ Bank</h1><p>Simple, secure everyday banking. Sign in or create an account to continue.</p></div>
+  <div class="card">
+    <div class="tabs">
+      <button id="tab-login" class="active" qa-test="auth-tab-login">Login</button>
+      <button id="tab-register" qa-test="auth-tab-register">Register</button>
+    </div>
+
+    <form id="login-form" novalidate qa-test="login-form">
+      <label for="login-identifier">Email or Phone</label>
+      <input id="login-identifier" autocomplete="username" qa-test="login-identifier">
+      <label for="login-password">Password</label>
+      <input id="login-password" type="password" autocomplete="current-password" qa-test="login-password">
+      <div id="login-error" qa-test="login-error"></div>
+      <button id="login-btn" class="btn" type="submit" qa-test="login-submit">Login</button>
+    </form>
+
+    <form id="register-form" class="hidden" novalidate qa-test="register-form">
+      <label for="reg-fullname">Full Name</label>
+      <input id="reg-fullname" qa-test="register-fullname">
+      <div id="err-reg-fullname" class="field-err" qa-test="register-fullname-error"></div>
+      <div class="row">
+        <div><label for="reg-email">Email</label><input id="reg-email" qa-test="register-email"><div id="err-reg-email" class="field-err" qa-test="register-email-error"></div></div>
+        <div><label for="reg-phone">Phone</label><input id="reg-phone" qa-test="register-phone"><div id="err-reg-phone" class="field-err" qa-test="register-phone-error"></div></div>
+      </div>
+      <label for="reg-dob">Date of Birth</label>
+      <input id="reg-dob" type="date" qa-test="register-dob">
+      <div id="err-reg-dob" class="field-err" qa-test="register-dob-error"></div>
+      <div class="row">
+        <div><label for="reg-password">Password</label><input id="reg-password" type="password" qa-test="register-password"><div id="err-reg-password" class="field-err" qa-test="register-password-error"></div></div>
+        <div><label for="reg-confirm">Confirm Password</label><input id="reg-confirm" type="password" qa-test="register-confirm"><div id="err-reg-confirm" class="field-err" qa-test="register-confirm-error"></div></div>
+      </div>
+      <div id="reg-error" qa-test="register-form-error"></div>
+      <div id="reg-success" qa-test="register-success"></div>
+      <button id="reg-btn" class="btn" type="submit" qa-test="register-submit">Create Account</button>
+    </form>
+  </div>
+  <div class="features">
+    <div class="feature" qa-test="feature-secure"><b>Secure</b>Hashed passwords</div>
+    <div class="feature" qa-test="feature-transfers"><b>Fast transfers</b>Between accounts</div>
+    <div class="feature" qa-test="feature-history"><b>Clear history</b>Filter and export</div>
+  </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="view-accounts" class="hidden app-view" qa-test="page-accounts">
+  <div class="hero">
+    <div><h2 id="hero-title" qa-test="hero-title">Welcome</h2><p id="hero-sub" qa-test="hero-subtitle">Here is a summary of your accounts.</p></div>
+    <div class="hero-actions">
+      <button class="btn gold" type="button" data-go="open" qa-test="quick-open-account">+ Open account</button>
+      <button class="btn gold" type="button" data-go="transact" qa-test="quick-deposit">Deposit</button>
+      <button class="btn gold" type="button" data-go="transact" qa-test="quick-transfer">Transfer</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>My Accounts</h2>
+    <div class="grid">
+      <div class="stat"><div class="k">Total balance</div><div class="v" id="total-balance" qa-test="accounts-total-balance">0.00 EGP</div></div>
+      <div class="stat"><div class="k">Number of accounts</div><div class="v" id="accounts-count" qa-test="accounts-count">0</div></div>
+    </div>
+    <div class="tablewrap">
+      <table id="accounts-table" qa-test="accounts-table">
+        <thead><tr><th>Account Number</th><th>Type</th><th>Balance</th><th>Status</th></tr></thead>
+        <tbody id="accounts-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OPEN ACCOUNT -->
+<section id="view-open" class="hidden app-view" qa-test="page-open-account">
+  <div class="card">
+    <h2>Open a New Account</h2>
+    <label for="open-type">Account Type</label>
+    <select id="open-type" qa-test="open-account-type"><option value="SAVINGS">Savings</option><option value="CURRENT">Current</option></select>
+    <label for="open-balance">Opening Balance (EGP)</label>
+    <input id="open-balance" inputmode="decimal" qa-test="open-account-balance">
+    <div id="open-msg" qa-test="open-account-message"></div>
+    <button id="open-btn" class="btn" qa-test="open-account-submit">Open Account</button>
+  </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="view-transact" class="hidden app-view" qa-test="page-transactions">
+  <div class="card">
+    <h2>Deposit / Withdraw</h2>
+    <label for="tx-account">Account</label>
+    <select id="tx-account" qa-test="tx-account-select"></select>
+    <label for="tx-amount">Amount (EGP)</label>
+    <input id="tx-amount" inputmode="decimal" qa-test="tx-amount">
+    <button id="deposit-btn" class="btn" qa-test="tx-deposit-submit">Deposit</button>
+    <button id="withdraw-btn" class="btn alt" qa-test="tx-withdraw-submit">Withdraw</button>
+    <div id="tx-msg" qa-test="tx-message"></div>
+    <div id="receipt" class="hidden" qa-test="receipt"></div>
+  </div>
+  <div class="card">
+    <h2>Transfer</h2>
+    <label for="tr-from">From Account</label>
+    <select id="tr-from" qa-test="transfer-from"></select>
+    <label for="tr-to">Destination Account Number</label>
+    <input id="tr-to" inputmode="numeric" qa-test="transfer-to-account">
+    <label for="tr-amount">Amount (EGP)</label>
+    <input id="tr-amount" inputmode="decimal" qa-test="transfer-amount">
+    <label for="tr-note">Note (optional)</label>
+    <input id="tr-note" maxlength="60" qa-test="transfer-note">
+    <div id="tr-msg" qa-test="transfer-message"></div>
+    <button id="transfer-btn" class="btn" qa-test="transfer-submit">Transfer</button>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="view-history" class="hidden app-view" qa-test="page-history">
+  <div class="card">
+    <h2>Transaction History</h2>
+    <div class="row">
+      <div><label for="hist-account">Account</label><select id="hist-account" qa-test="history-account"></select></div>
+      <div><label for="hist-type">Type</label>
+        <select id="hist-type" qa-test="history-type"><option value="ALL">All</option><option value="DEPOSIT">Deposit</option><option value="WITHDRAWAL">Withdrawal</option><option value="TRANSFER_IN">Transfer In</option><option value="TRANSFER_OUT">Transfer Out</option></select></div>
+      <div><label for="hist-from">From</label><input id="hist-from" type="date" qa-test="history-from"></div>
+      <div><label for="hist-to">To</label><input id="hist-to" type="date" qa-test="history-to"></div>
+    </div>
+    <button id="hist-filter-btn" class="btn" qa-test="history-apply">Apply Filters</button>
+    <button id="export-btn" class="btn alt" qa-test="history-export">Export CSV</button>
+    <div id="hist-msg" qa-test="history-message"></div>
+    <div class="tablewrap">
+      <table id="hist-table" qa-test="history-table">
+        <thead><tr><th>Reference</th><th>Type</th><th>Amount</th><th>Date/Time</th><th>Balance After</th></tr></thead>
+        <tbody id="hist-body"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="hist-prev" class="btn sm alt" qa-test="history-prev">Prev</button>
+      <span id="hist-page" qa-test="history-page-info">Page 1 of 1</span>
+      <button id="hist-next" class="btn sm alt" qa-test="history-next">Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="view-admin" class="hidden app-view" qa-test="page-admin">
+  <div class="card">
+    <h2>Admin: All Accounts</h2>
+    <label for="admin-search">Search by Account Number</label>
+    <input id="admin-search" qa-test="admin-search">
+    <button id="admin-search-btn" class="btn" qa-test="admin-search-submit">Search</button>
+    <div id="admin-msg" qa-test="admin-message"></div>
+    <div class="tablewrap">
+      <table id="admin-table" qa-test="admin-table">
+        <thead><tr><th>Account</th><th>Owner</th><th>Type</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="admin-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <a href="/api-docs.html" target="_blank" qa-test="footer-api-docs">API Documentation</a>
+  <a href="/qa-locators.html" target="_blank" qa-test="footer-qa-locators">QA Locators</a>
+</footer>
+
+<div id="modal" class="hidden" qa-test="modal">
+  <div class="box">
+    <h2 id="modal-title" qa-test="modal-title">Confirm</h2>
+    <label for="modal-reason">Reason (5-100 characters)</label>
+    <input id="modal-reason" qa-test="modal-reason">
+    <div id="modal-error" class="field-err" qa-test="modal-error"></div>
+    <button id="modal-confirm" class="btn" qa-test="modal-confirm">Confirm</button>
+    <button id="modal-cancel" class="btn gray" qa-test="modal-cancel">Cancel</button>
+  </div>
+</div>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>
