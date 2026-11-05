@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TQ Bank</title>
+<style>
+:root{--plum:#5A0941;--plum-2:#7A2A5E;--rose:#5A0941;--rose-d:#430631;--pink:#F9C2BD;--blush:#FEF3F1;--blush-2:#FBE3E0;--bg:#FFFFFD;--line:#F0DAD7;--txt:#383842;--muted:#767683;--ok:#12803c;--okbg:#e6f6ec;--err:#c0262d;--errbg:#fdecec}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.5}
+header{background:#fff;color:var(--txt);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(90,9,65,.05);position:sticky;top:0;z-index:5}
+.bar{max-width:1040px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem;letter-spacing:.3px}
+.brand img{height:38px;width:auto;display:block}.bname{position:absolute;left:-9999px}
+.logo{width:34px;height:34px;flex:none}
+.logo-big{height:120px;width:auto;margin:0 auto 6px;display:block}
+nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+nav .who{font-size:.85rem;color:var(--muted);margin-right:6px}
+nav button{background:transparent;color:var(--txt);border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.92rem}
+nav button:hover{background:var(--blush-2)}
+nav button.active{background:var(--plum);color:#fff;font-weight:600}
+nav button.logout{border:1px solid var(--line)}
+main{max-width:1040px;margin:24px auto;padding:0 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 2px 10px rgba(90,9,65,.05)}
+h2{margin:0 0 14px;font-size:1.15rem;color:var(--plum)}
+label{display:block;margin:14px 0 6px;font-size:.85rem;font-weight:600;color:var(--txt)}
+input,select{width:100%;padding:10px 12px;border:1px solid #E2D2DA;border-radius:9px;font-size:.98rem;background:#fff;color:var(--txt)}
+input:focus,select:focus{outline:3px solid rgba(90,9,65,.15);border-color:var(--rose)}
+.btn{background:var(--rose);color:#fff;border:0;padding:11px 18px;border-radius:9px;cursor:pointer;font-size:.95rem;font-weight:600;margin-top:16px;margin-right:8px;transition:background .18s ease}
+.btn:hover{background:var(--rose-d)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.alt{background:#fff;color:var(--rose-d);border:1px solid var(--rose)}
+.btn.alt:hover{background:var(--blush)}
+.btn.sm{padding:6px 12px;margin:0;font-size:.82rem}
+.btn.danger{background:var(--err)}
+.btn.ok{background:var(--ok)}
+.btn.gray{background:#767683}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--blush);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat .k{color:var(--muted);font-size:.8rem}
+.stat .v{font-size:1.5rem;font-weight:700;margin-top:4px;color:var(--plum)}
+.field-err{color:var(--err);font-size:.8rem;min-height:1.1em;margin-top:4px}
+.msg{padding:10px 12px;border-radius:9px;margin-top:14px;font-size:.92rem}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.err{background:var(--errbg);color:var(--err)}
+.tabs{display:flex;gap:4px;background:var(--blush-2);padding:4px;border-radius:11px;margin-bottom:8px}
+.tabs button{flex:1;background:transparent;border:0;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button.active{background:#fff;color:var(--plum);box-shadow:0 1px 3px #0002}
+.auth-wrap{max-width:460px;margin:30px auto}
+.auth-title{text-align:center;margin-bottom:18px}
+.auth-title h1{margin:0;font-size:1.5rem;color:var(--plum)}
+.auth-title p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.tablewrap{overflow:hidden;margin-top:12px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{background:var(--blush);color:var(--plum-2);font-size:.78rem;text-transform:uppercase;letter-spacing:.4px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:.9rem}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.75rem;font-weight:700}
+.badge.ACTIVE{background:var(--okbg);color:var(--ok)}
+.badge.FROZEN{background:var(--errbg);color:var(--err)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>div{flex:1;min-width:150px}
+.pager{display:flex;align-items:center;gap:10px;margin-top:14px}
+.pager .btn{margin:0}
+#receipt{background:#EFF7F2;border:1px dashed var(--ok);padding:14px;margin-top:14px;border-radius:10px;font-size:.92rem}
+#receipt div{padding:2px 0}
+.hidden{display:none!important}
+#modal{position:fixed;inset:0;background:rgba(56,56,66,.55);display:flex;align-items:center;justify-content:center;z-index:20}
+#modal .box{background:#fff;padding:22px;border-radius:14px;width:min(430px,92vw)}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:18px}
+footer a{color:var(--rose-d);margin:0 8px;text-decoration:none}
+footer a:hover{text-decoration:underline}
+.hero{background:linear-gradient(120deg,#5A0941 0%,#7A2A5E 100%);color:#fff;border-radius:16px;padding:24px 26px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 6px 18px rgba(90,9,65,.15)}
+.hero h2{margin:0 0 4px;font-size:1.4rem;color:#fff}
+.hero p{margin:0;color:#FBE3E0;font-size:.95rem}
+.hero-actions .btn{margin:4px 8px 4px 0}
+.btn.gold{background:var(--pink);color:var(--plum)}
+.btn.gold:hover{background:#fcd3cf}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.feature{background:#fff;border:1px solid var(--line);border-top:3px solid var(--pink);border-radius:12px;padding:12px 8px;text-align:center;font-size:.78rem;color:var(--muted)}
+.feature b{display:block;color:var(--plum);font-size:.88rem;margin-bottom:2px}
+.empty{text-align:center;padding:26px 10px;color:var(--muted)}
+.empty .btn{margin-top:12px}
+:focus-visible{outline:3px solid rgba(90,9,65,.4);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand" qa-test="brand-logo"><img src="img/logo-mark.png" alt="TQ Bank"><span class="bname">TQ Bank</span></div>
+    <nav id="nav" class="hidden" qa-test="nav">
+      <span id="welcome" class="who" qa-test="nav-welcome"></span>
+      <button id="nav-accounts" data-view="accounts" qa-test="nav-accounts">Accounts</button>
+      <button id="nav-open" data-view="open" qa-test="nav-open-account">Open Account</button>
+      <button id="nav-transact" data-view="transact" qa-test="nav-transactions">Transactions</button>
+      <button id="nav-history" data-view="history" qa-test="nav-history">History</button>
+      <button id="nav-admin" data-view="admin" class="hidden" qa-test="nav-admin">Admin</button>
+      <button id="logout-btn" class="logout" qa-test="nav-logout">Logout</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- AUTH -->
+<section id="view-auth" class="auth-wrap" qa-test="page-auth">
+  <div class="auth-title"><div class="logo-wrap" qa-test="auth-logo"><img class="logo-big" src="img/logo-full.png" alt="TQ Bank"></div><h1>Welcome to TQ Bank</h1><p>Simple, secure everyday banking. Sign in or create an account to continue.</p></div>
+  <div class="card">
+    <div class="tabs">
+      <button id="tab-login" class="active" qa-test="auth-tab-login">Login</button>
+      <button id="tab-register" qa-test="auth-tab-register">Register</button>
+    </div>
+
+    <form id="login-form" novalidate qa-test="login-form">
+      <label for="login-identifier">Email or Phone</label>
+      <input id="login-identifier" autocomplete="username" qa-test="login-identifier">
+      <label for="login-password">Password</label>
+      <input id="login-password" type="password" autocomplete="current-password" qa-test="login-password">
+      <div id="login-error" qa-test="login-error"></div>
+      <button id="login-btn" class="btn" type="submit" qa-test="login-submit">Login</button>
+    </form>
+
+    <form id="register-form" class="hidden" novalidate qa-test="register-form">
+      <label for="reg-fullname">Full Name</label>
+      <input id="reg-fullname" qa-test="register-fullname">
+      <div id="err-reg-fullname" class="field-err" qa-test="register-fullname-error"></div>
+      <div class="row">
+        <div><label for="reg-email">Email</label><input id="reg-email" qa-test="register-email"><div id="err-reg-email" class="field-err" qa-test="register-email-error"></div></div>
+        <div><label for="reg-phone">Phone</label><input id="reg-phone" qa-test="register-phone"><div id="err-reg-phone" class="field-err" qa-test="register-phone-error"></div></div>
+      </div>
+      <label for="reg-dob">Date of Birth</label>
+      <input id="reg-dob" type="date" qa-test="register-dob">
+      <div id="err-reg-dob" class="field-err" qa-test="register-dob-error"></div>
+      <div class="row">
+        <div><label for="reg-password">Password</label><input id="reg-password" type="password" qa-test="register-password"><div id="err-reg-password" class="field-err" qa-test="register-password-error"></div></div>
+        <div><label for="reg-confirm">Confirm Password</label><input id="reg-confirm" type="password" qa-test="register-confirm"><div id="err-reg-confirm" class="field-err" qa-test="register-confirm-error"></div></div>
+      </div>
+      <div id="reg-error" qa-test="register-form-error"></div>
+      <div id="reg-success" qa-test="register-success"></div>
+      <button id="reg-btn" class="btn" type="submit" qa-test="register-submit">Create Account</button>
+    </form>
+  </div>
+  <div class="features">
+    <div class="feature" qa-test="feature-secure"><b>Secure</b>Hashed passwords</div>
+    <div class="feature" qa-test="feature-transfers"><b>Fast transfers</b>Between accounts</div>
+    <div class="feature" qa-test="feature-history"><b>Clear history</b>Filter and export</div>
+  </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="view-accounts" class="hidden app-view" qa-test="page-accounts">
+  <div class="hero">
+    <div><h2 id="hero-title" qa-test="hero-title">Welcome</h2><p id="hero-sub" qa-test="hero-subtitle">Here is a summary of your accounts.</p></div>
+    <div class="hero-actions">
+      <button class="btn gold" type="button" data-go="open" qa-test="quick-open-account">+ Open account</button>
+      <button class="btn gold" type="button" data-go="transact" qa-test="quick-deposit">Deposit</button>
+      <button class="btn gold" type="button" data-go="transact" qa-test="quick-transfer">Transfer</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>My Accounts</h2>
+    <div class="grid">
+      <div class="stat"><div class="k">Total balance</div><div class="v" id="total-balance" qa-test="accounts-total-balance">0.00 EGP</div></div>
+      <div class="stat"><div class="k">Number of accounts</div><div class="v" id="accounts-count" qa-test="accounts-count">0</div></div>
+    </div>
+    <div class="tablewrap">
+      <table id="accounts-table" qa-test="accounts-table">
+        <thead><tr><th>Account Number</th><th>Type</th><th>Balance</th><th>Status</th></tr></thead>
+        <tbody id="accounts-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OPEN ACCOUNT -->
+<section id="view-open" class="hidden app-view" qa-test="page-open-account">
+  <div class="card">
+    <h2>Open a New Account</h2>
+    <label for="open-type">Account Type</label>
+    <select id="open-type" qa-test="open-account-type"><option value="SAVINGS">Savings</option><option value="CURRENT">Current</option></select>
+    <label for="open-balance">Opening Balance (EGP)</label>
+    <input id="open-balance" inputmode="decimal" qa-test="open-account-balance">
+    <div id="open-msg" qa-test="open-account-message"></div>
+    <button id="open-btn" class="btn" qa-test="open-account-submit">Open Account</button>
+  </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="view-transact" class="hidden app-view" qa-test="page-transactions">
+  <div class="card">
+    <h2>Deposit / Withdraw</h2>
+    <label for="tx-account">Account</label>
+    <select id="tx-account" qa-test="tx-account-select"></select>
+    <label for="tx-amount">Amount (EGP)</label>
+    <input id="tx-amount" inputmode="decimal" qa-test="tx-amount">
+    <button id="deposit-btn" class="btn" qa-test="tx-deposit-submit">Deposit</button>
+    <button id="withdraw-btn" class="btn alt" qa-test="tx-withdraw-submit">Withdraw</button>
+    <div id="tx-msg" qa-test="tx-message"></div>
+    <div id="receipt" class="hidden" qa-test="receipt"></div>
+  </div>
+  <div class="card">
+    <h2>Transfer</h2>
+    <label for="tr-from">From Account</label>
+    <select id="tr-from" qa-test="transfer-from"></select>
+    <label for="tr-to">Destination Account Number</label>
+    <input id="tr-to" inputmode="numeric" qa-test="transfer-to-account">
+    <label for="tr-amount">Amount (EGP)</label>
+    <input id="tr-amount" inputmode="decimal" qa-test="transfer-amount">
+    <label for="tr-note">Note (optional)</label>
+    <input id="tr-note" maxlength="60" qa-test="transfer-note">
+    <div id="tr-msg" qa-test="transfer-message"></div>
+    <button id="transfer-btn" class="btn" qa-test="transfer-submit">Transfer</button>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="view-history" class="hidden app-view" qa-test="page-history">
+  <div class="card">
+    <h2>Transaction History</h2>
+    <div class="row">
+      <div><label for="hist-account">Account</label><select id="hist-account" qa-test="history-account"></select></div>
+      <div><label for="hist-type">Type</label>
+        <select id="hist-type" qa-test="history-type"><option value="ALL">All</option><option value="DEPOSIT">Deposit</option><option value="WITHDRAWAL">Withdrawal</option><option value="TRANSFER_IN">Transfer In</option><option value="TRANSFER_OUT">Transfer Out</option></select></div>
+      <div><label for="hist-from">From</label><input id="hist-from" type="date" qa-test="history-from"></div>
+      <div><label for="hist-to">To</label><input id="hist-to" type="date" qa-test="history-to"></div>
+    </div>
+    <button id="hist-filter-btn" class="btn" qa-test="history-apply">Apply Filters</button>
+    <button id="export-btn" class="btn alt" qa-test="history-export">Export CSV</button>
+    <div id="hist-msg" qa-test="history-message"></div>
+    <div class="tablewrap">
+      <table id="hist-table" qa-test="history-table">
+        <thead><tr><th>Reference</th><th>Type</th><th>Amount</th><th>Date/Time</th><th>Balance After</th></tr></thead>
+        <tbody id="hist-body"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="hist-prev" class="btn sm alt" qa-test="history-prev">Prev</button>
+      <span id="hist-page" qa-test="history-page-info">Page 1 of 1</span>
+      <button id="hist-next" class="btn sm alt" qa-test="history-next">Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="view-admin" class="hidden app-view" qa-test="page-admin">
+  <div class="card">
+    <h2>Admin: All Accounts</h2>
+    <label for="admin-search">Search by Account Number</label>
+    <input id="admin-search" qa-test="admin-search">
+    <button id="admin-search-btn" class="btn" qa-test="admin-search-submit">Search</button>
+    <div id="admin-msg" qa-test="admin-message"></div>
+    <div class="tablewrap">
+      <table id="admin-table" qa-test="admin-table">
+        <thead><tr><th>Account</th><th>Owner</th><th>Type</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="admin-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <a href="/api-docs.html" target="_blank" qa-test="footer-api-docs">API Documentation</a>
+  <a href="/qa-locators.html" target="_blank" qa-test="footer-qa-locators">QA Locators</a>
+</footer>
+
+<div id="modal" class="hidden" qa-test="modal">
+  <div class="box">
+    <h2 id="modal-title" qa-test="modal-title">Confirm</h2>
+    <label for="modal-reason">Reason (5-100 characters)</label>
+    <input id="modal-reason" qa-test="modal-reason">
+    <div id="modal-error" class="field-err" qa-test="modal-error"></div>
+    <button id="modal-confirm" class="btn" qa-test="modal-confirm">Confirm</button>
+    <button id="modal-cancel" class="btn gray" qa-test="modal-cancel">Cancel</button>
+  </div>
+</div>
+
+<script>
+const API = '/api';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let token = sessionStorage.getItem('token');
+let me = JSON.parse(sessionStorage.getItem('me') || 'null');
+let accounts = [];
+let histPage = 1, histTotalPages = 1;
+let modalCtx = null;
+
+function money(n) {
+  return Math.abs(Number(n)).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' EGP';
+}
+function setMsg(id, text, ok) {
+  const el = $(id); el.textContent = text || ''; el.className = text ? (ok ? 'msg ok' : 'msg err') : '';
+}
+function num(v) { const x = parseFloat(String(v).trim()); return isNaN(x) ? null : x; }
+
+async function api(method, path, body) {
+  const headers = {'Content-Type': 'application/json'};
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const r = await fetch(API + path, {method, headers, body: body !== undefined ? JSON.stringify(body) : undefined});
+  const ct = r.headers.get('content-type') || '';
+  const data = ct.includes('json') ? await r.json() : await r.text();
+  if (!r.ok) {
+    if (r.status === 401 && !path.startsWith('/auth')) {
+      token = null; me = null; sessionStorage.clear();
+      showAuth('Your session has expired. Please log in again.');
+    }
+    throw new Error((data && data.error) || 'Request failed');
+  }
+  return data;
+}
+
+/* ---------- navigation ---------- */
+function showAuth(message) {
+  $('nav').classList.add('hidden');
+  document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+  $('view-auth').classList.remove('hidden');
+  setMsg('login-error', message || '', false);
+}
+function showView(name) {
+  $('view-auth').classList.add('hidden');
+  document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+  $('view-' + name).classList.remove('hidden');
+  document.querySelectorAll('#nav button[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  if (name === 'accounts' || name === 'open') loadAccounts();
+  if (name === 'transact' || name === 'history') loadAccounts().then(() => { if (name === 'history') loadHistory(1); });
+  if (name === 'admin') loadAdmin();
+}
+function showApp() {
+  $('nav').classList.remove('hidden');
+  $('welcome').textContent = 'Welcome, ' + me.fullName;
+  $('hero-title').textContent = 'Hello, ' + me.fullName;
+  $('hero-sub').textContent = me.role === 'ADMIN' ? 'You are signed in as admin. Manage accounts from the Admin tab.' : 'Here is a summary of your accounts.';
+  $('nav-admin').classList.toggle('hidden', me.role !== 'ADMIN');
+  showView('accounts');
+}
+document.querySelectorAll('#nav button[data-view]').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+$('logout-btn').addEventListener('click', async () => {
+  try { await api('POST', '/auth/logout'); } catch (e) {}
+  token = null; me = null;
+  showAuth('');
+});
+
+/* ---------- auth ---------- */
+$('tab-login').addEventListener('click', () => {
+  $('login-form').classList.remove('hidden'); $('register-form').classList.add('hidden');
+  $('tab-login').classList.add('active'); $('tab-register').classList.remove('active');
+});
+$('tab-register').addEventListener('click', () => {
+  $('register-form').classList.remove('hidden'); $('login-form').classList.add('hidden');
+  $('tab-register').classList.add('active'); $('tab-login').classList.remove('active');
+});
+
+$('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  setMsg('login-error', '');
+  const identifier = $('login-identifier').value.trim(), password = $('login-password').value;
+  if (!identifier || !password) { setMsg('login-error', 'Email/phone and password are required.', false); return; }
+  try {
+    const d = await api('POST', '/auth/login', {identifier, password});
+    token = d.token; me = {userId: d.userId, fullName: d.fullName, role: d.role};
+    sessionStorage.setItem('token', token); sessionStorage.setItem('me', JSON.stringify(me));
+    $('login-password').value = '';
+    showApp();
+  } catch (err) { setMsg('login-error', err.message, false); }
+});
+
+function validateReg() {
+  ['fullname', 'email', 'phone', 'dob', 'password', 'confirm'].forEach(f => $('err-reg-' + f).textContent = '');
+  let ok = true;
+  const bad = (f, m) => { $('err-reg-' + f).textContent = m; ok = false; };
+  if (!/^[A-Za-z ]{3,50}$/.test($('reg-fullname').value.trim())) bad('fullname', 'Full name must be 3-50 alphabetic characters.');
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test($('reg-email').value.trim())) bad('email', 'Invalid email format.');
+  if (!/^01[0-5]\d{8}$/.test($('reg-phone').value.trim())) bad('phone', 'Phone must be 11 digits starting with 010, 011, 012 or 015.');
+  const dob = $('reg-dob').value;
+  if (!dob) bad('dob', 'Date of birth is required.');
+  else {
+    const d = new Date(dob), t = new Date();
+    let age = t.getFullYear() - d.getFullYear();
+    const m = t.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--;
+    if (d >= t) bad('dob', 'Date of birth must be in the past.');
+    else if (age < 18) bad('dob', 'You must be at least 18 years old.');
+  }
+  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,20}$/.test($('reg-password').value))
+    bad('password', 'Password must be 8-20 chars with uppercase, lowercase, digit and special character (!@#$%^&*).');
+  return ok;
+}
+$('register-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  setMsg('reg-error', ''); setMsg('reg-success', '');
+  if (!validateReg()) return;
+  try {
+    await api('POST', '/auth/register', {
+      fullName: $('reg-fullname').value.trim(), email: $('reg-email').value.trim(), phone: $('reg-phone').value.trim(),
+      dateOfBirth: $('reg-dob').value, password: $('reg-password').value, confirmPassword: $('reg-confirm').value
+    });
+    setMsg('reg-success', 'Registration successful. You can log in now.', true);
+    $('register-form').reset();
+  } catch (err) { setMsg('reg-error', err.message, false); }
+});
+
+/* ---------- accounts ---------- */
+async function loadAccounts() {
+  const d = await api('GET', '/accounts');
+  accounts = d.accounts;
+  $('accounts-body').innerHTML = accounts.map(a => {
+    const no = esc(a.accountNumber);
+    return `<tr id="row-${no}" qa-test="account-row-${no}" data-account-id="${a.id}">` +
+      `<td qa-test="account-number-${no}">${no}</td>` +
+      `<td qa-test="account-type-${no}">${esc(a.accountType)}</td>` +
+      `<td class="bal" qa-test="account-balance-${no}">${money(a.balance)}</td>` +
+      `<td qa-test="account-status-${no}"><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td></tr>`;
+  }).join('') ||
+    '<tr><td colspan="4" id="no-accounts"><div class="empty"><div qa-test="accounts-empty">You have no accounts yet. Open your first account.</div><button class="btn sm" type="button" data-go="open" qa-test="accounts-empty-open">Open account</button></div></td></tr>';
+  const total = accounts.filter(a => a.status !== 'FROZEN').reduce((s, a) => s + Number(a.balance), 0);
+  $('total-balance').textContent = money(total);
+  $('accounts-count').textContent = accounts.length;
+  const opts = accounts.map(a => `<option value="${a.id}">${esc(a.accountNumber)} (${esc(a.accountType)})</option>`).join('');
+  ['tx-account', 'tr-from', 'hist-account'].forEach(id => { const cur = $(id).value; $(id).innerHTML = opts; if (cur) $(id).value = cur; });
+}
+
+$('open-btn').addEventListener('click', async () => {
+  setMsg('open-msg', '');
+  try {
+    const d = await api('POST', '/accounts', {accountType: $('open-type').value, openingBalance: num($('open-balance').value)});
+    setMsg('open-msg', `Account ${d.accountNumber} opened. Reference: ${d.referenceId}`, true);
+    $('open-balance').value = '';
+    loadAccounts();
+  } catch (err) { setMsg('open-msg', err.message, false); }
+});
+
+/* ---------- transactions ---------- */
+function showReceipt(r) {
+  const el = $('receipt');
+  el.classList.remove('hidden');
+  el.innerHTML = `<div>Reference: <strong id="receipt-ref" qa-test="receipt-reference">${esc(r.referenceId)}</strong></div>` +
+    `<div>Type: <span id="receipt-type" qa-test="receipt-type">${esc(r.type)}</span></div>` +
+    `<div>Account: <span id="receipt-account" qa-test="receipt-account">${esc(r.accountNumber)}</span></div>` +
+    `<div>Amount: <span id="receipt-amount" qa-test="receipt-amount">${money(r.amount)}</span></div>` +
+    `<div>Balance after: <span id="receipt-balance" qa-test="receipt-balance-after">${Number(r.balanceAfter).toLocaleString('en-US', {minimumFractionDigits: 2})} EGP</span></div>` +
+    `<div>Date/Time: <span id="receipt-date" qa-test="receipt-datetime">${esc(r.dateTime)}</span></div>`;
+}
+async function doTx(kind) {
+  setMsg('tx-msg', ''); $('receipt').classList.add('hidden');
+  const id = $('tx-account').value;
+  const acc = accounts.find(a => String(a.id) === String(id));
+  const oldBal = acc ? acc.balance : 0;
+  try {
+    const r = await api('POST', `/accounts/${id}/${kind}`, {amount: num($('tx-amount').value)});
+    setMsg('tx-msg', `${kind === 'deposit' ? 'Deposit' : 'Withdrawal'} successful. New balance: ${money(oldBal)}`, true);
+    showReceipt(r);
+    $('tx-amount').value = '';
+    loadAccounts();
+  } catch (err) { setMsg('tx-msg', err.message, false); }
+}
+$('deposit-btn').addEventListener('click', () => doTx('deposit'));
+$('withdraw-btn').addEventListener('click', () => doTx('withdraw'));
+
+$('transfer-btn').addEventListener('click', async () => {
+  setMsg('tr-msg', '');
+  try {
+    const r = await api('POST', '/transfers', {
+      fromAccountId: Number($('tr-from').value) || null, toAccountNumber: $('tr-to').value.trim(),
+      amount: num($('tr-amount').value), note: $('tr-note').value || null
+    });
+    setMsg('tr-msg', `Transfer successful. Reference: ${r.referenceId}. Balance after: ${Number(r.balanceAfter).toLocaleString('en-US', {minimumFractionDigits: 2})} EGP`, true);
+    $('tr-to').value = ''; $('tr-amount').value = ''; $('tr-note').value = '';
+    loadAccounts();
+  } catch (err) { setMsg('tr-msg', err.message, false); }
+});
+
+/* ---------- history ---------- */
+function histQuery(withPage) {
+  const p = new URLSearchParams();
+  if ($('hist-type').value) p.set('type', $('hist-type').value);
+  if ($('hist-from').value) p.set('from', $('hist-from').value);
+  if ($('hist-to').value) p.set('to', $('hist-to').value);
+  if (withPage) p.set('page', histPage);
+  return p.toString();
+}
+async function loadHistory(page) {
+  histPage = page; setMsg('hist-msg', '');
+  const id = $('hist-account').value;
+  if (!id) { $('hist-body').innerHTML = ''; setMsg('hist-msg', 'No transactions found.', false); return; }
+  try {
+    const d = await api('GET', `/accounts/${id}/transactions?${histQuery(true)}`);
+    histTotalPages = Math.max(d.totalPages, 1);
+    $('hist-body').innerHTML = d.transactions.map(t =>
+      `<tr qa-test="history-row"><td qa-test="history-reference">${esc(t.referenceId)}</td><td qa-test="history-type-cell">${esc(t.type)}</td>` +
+      `<td qa-test="history-amount">${money(t.amount)}</td><td qa-test="history-datetime">${esc(t.createdAt)}</td>` +
+      `<td qa-test="history-balance-after">${Number(t.balanceAfter).toLocaleString('en-US', {minimumFractionDigits: 2})}</td></tr>`).join('');
+    $('hist-page').textContent = `Page ${d.page} of ${histTotalPages}`;
+    $('hist-prev').disabled = histPage <= 1;
+    if (d.message) setMsg('hist-msg', d.message, false);
+  } catch (err) { $('hist-body').innerHTML = ''; setMsg('hist-msg', err.message, false); }
+}
+$('hist-filter-btn').addEventListener('click', () => loadHistory(1));
+$('hist-account').addEventListener('change', () => loadHistory(1));
+$('hist-prev').addEventListener('click', () => { if (histPage > 1) loadHistory(histPage - 1); });
+$('hist-next').addEventListener('click', () => loadHistory(histPage + 1));
+$('export-btn').addEventListener('click', async () => {
+  const id = $('hist-account').value;
+  try {
+    const csv = await api('GET', `/accounts/${id}/transactions/export?${histQuery(false)}`);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+    a.download = 'transactions.csv'; a.click();
+    setMsg('hist-msg', 'CSV exported.', true);
+  } catch (err) { setMsg('hist-msg', err.message, false); }
+});
+
+/* ---------- admin ---------- */
+async function loadAdmin() {
+  setMsg('admin-msg', '');
+  try {
+    const rows = await api('GET', '/admin/accounts?search=' + encodeURIComponent($('admin-search').value.trim()));
+    $('admin-body').innerHTML = rows.map(a => {
+      const no = esc(a.accountNumber);
+      const frozen = a.status === 'FROZEN';
+      const action = frozen ? 'unfreeze' : 'freeze';
+      return `<tr id="admin-row-${no}" qa-test="admin-row-${no}"><td qa-test="admin-account-${no}">${no}</td><td qa-test="admin-owner-${no}">${esc(a.owner)}</td><td>${esc(a.accountType)}</td>` +
+        `<td qa-test="admin-balance-${no}">${money(a.balance)}</td><td qa-test="admin-status-${no}"><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td>` +
+        `<td><button id="${action}-btn-${a.id}" qa-test="admin-${action}-${no}" class="btn sm ${frozen ? 'ok' : 'danger'}" data-id="${a.id}" data-action="${action}">${frozen ? 'Unfreeze' : 'Freeze'}</button></td></tr>`;
+    }).join('');
+    document.querySelectorAll('#admin-body button').forEach(b => b.addEventListener('click', () => openModal(b.dataset.id, b.dataset.action)));
+  } catch (err) { setMsg('admin-msg', err.message, false); }
+}
+$('admin-search-btn').addEventListener('click', loadAdmin);
+function openModal(id, action) {
+  modalCtx = {id, action};
+  $('modal-title').textContent = (action === 'freeze' ? 'Freeze' : 'Unfreeze') + ' account';
+  $('modal-reason').value = ''; $('modal-error').textContent = '';
+  $('modal').classList.remove('hidden');
+}
+$('modal-cancel').addEventListener('click', () => $('modal').classList.add('hidden'));
+$('modal-confirm').addEventListener('click', async () => {
+  try {
+    const d = await api('PUT', `/admin/accounts/${modalCtx.id}/${modalCtx.action}`, {reason: $('modal-reason').value});
+    $('modal').classList.add('hidden');
+    setMsg('admin-msg', d.message, true);
+    loadAdmin();
+  } catch (err) { $('modal-error').textContent = err.message; }
+});
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) showView(b.dataset.go); });
+
+/* ---------- boot ---------- */
+if (token && me) showApp(); else showAuth('');
+</script>
+</body>
+</html>
