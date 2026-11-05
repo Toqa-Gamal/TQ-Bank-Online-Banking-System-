@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tq-bank-demo
+    runtime: docker
+    plan: free
+    rootDir: banking-system
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: app.seed
+        value: admin
